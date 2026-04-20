@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 39 Practice Quiz 1</title>
+
+    <style>
+        /* --- CSS Variables & Themes --- */
+        :root {
+            --transition-speed: 0.3s;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            
+            /* Default Feedback Colors (Fallback for custom themes) */
+            --feedback-success-bg: #064e3b;
+            --feedback-success-border: #059669;
+            --feedback-success-text: #a7f3d0;
+            --feedback-error-bg: #7f1d1d;
+            --feedback-error-border: #dc2626;
+            --feedback-error-text: #fecaca;
+        }[data-theme="dark"] {
+            --bg-body: #1e293b; --bg-card: #334155; --bg-header: #0f172a;
+            --text-main: #f1f5f9; --text-muted: #94a3b8; --text-accent: #38bdf8;
+            --border-color: #475569; --highlight-bg: #475569;
+            --button-bg: #38bdf8; --button-text: #0f172a; --button-hover: #0ea5e9;
+        }[data-theme="light"] {
+            --bg-body: #f3f4f6; --bg-card: #ffffff; --bg-header: #ffffff;
+            --text-main: #1f2937; --text-muted: #6b7280; --text-accent: #2563eb;
+            --border-color: #e5e7eb; --highlight-bg: #f3f4f6;
+            --button-bg: #2563eb; --button-text: #ffffff; --button-hover: #1d4ed8;
+            --feedback-success-bg: #ecfdf5; --feedback-success-border: #34d399; --feedback-success-text: #065f46;
+            --feedback-error-bg: #fef2f2; --feedback-error-border: #f87171; --feedback-error-text: #991b1b;
+        }[data-theme="midnight"] {
+            --bg-body: #000000; --bg-card: #000000; --bg-header: #000000;
+            --text-main: #e0e0e0; --text-muted: #888888; --text-accent: #90caf9;
+            --border-color: #333333; --highlight-bg: #1a1a1a;
+            --button-bg: #90caf9; --button-text: #000000; --button-hover: #42a5f5;
+            --feedback-success-bg: #051b11; --feedback-success-border: #0f5132; --feedback-success-text: #75b798;
+            --feedback-error-bg: #2c0b0e; --feedback-error-border: #842029; --feedback-error-text: #ea868f;
+        }[data-theme="legacy-dark"] {
+            --bg-body: #2d343e; --bg-card: #3c424f; --bg-header: #3c424f;
+            --text-main: #e8e6e3; --text-muted: #b0c4de; --text-accent: #8ab4f8;
+            --border-color: #555; --highlight-bg: #454c5a;
+            --button-bg: #8ab4f8; --button-text: #202124; --button-hover: #a3c5f9;
+            --feedback-success-bg: #344e41; --feedback-success-border: #52b788; --feedback-success-text: #c7f9cc;
+            --feedback-error-bg: #5e2129; --feedback-error-border: #a4133c; --feedback-error-text: #f8d7da;
+        }[data-theme="sepia"] {
+            --bg-body: #f4ecd8; --bg-card: #fdf6e3; --bg-header: #e4d5b7;
+            --text-main: #433422; --text-muted: #7c6f5a; --text-accent: #a05a2c;
+            --border-color: #d3c4a5; --highlight-bg: #ebe1c9;
+            --button-bg: #a05a2c; --button-text: #fdf6e3; --button-hover: #864822;
+            --feedback-success-bg: #e6f4ea; --feedback-success-border: #8ab893; --feedback-success-text: #2e4c35;
+            --feedback-error-bg: #f9e3e3; --feedback-error-border: #d48f8f; --feedback-error-text: #5c2b2b;
+        }
+
+        [data-theme="contrast"] {
+            --bg-body: #000000; --bg-card: #000000; --bg-header: #000000;
+            --text-main: #ffffff; --text-muted: #dddddd; --text-accent: #ffff00;
+            --border-color: #ffffff; --highlight-bg: #333333;
+            --button-bg: #ffff00; --button-text: #000000; --button-hover: #e6e600;
+            --feedback-success-bg: #000000; --feedback-success-border: #00ff00; --feedback-success-text: #00ff00;
+            --feedback-error-bg: #000000; --feedback-error-border: #ff0000; --feedback-error-text: #ff0000;
+        }
+
+        /* --- Global Reset & Layout --- */
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-main);
+            margin: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            line-height: 1.6;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--bg-header);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header.unpinned { position: relative; box-shadow: none; }
+
+        .header-top {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; flex-wrap: wrap; gap: 15px;
+        }
+
+        header h1 { font-size: 1.5rem; margin: 0; color: var(--text-accent); font-weight: 700; }
+
+        .controls-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+        /* --- Custom Theme Builder --- */
+        .custom-builder {
+            display: none; flex-wrap: wrap; gap: 15px;
+            background-color: var(--bg-card); padding: 10px 15px;
+            border-radius: 8px; border: 1px solid var(--border-color);
+            margin-top: 5px; font-size: 0.85rem; animation: fadeIn 0.3s;
+            width: 100%; justify-content: flex-end;
+        }
+        .custom-builder.active { display: flex; }
+        .color-picker-group { display: flex; align-items: center; gap: 8px; }
+        .color-picker-group input[type="color"] {
+            border: none; width: 25px; height: 25px; border-radius: 4px;
+            cursor: pointer; padding: 0; background: none;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Controls --- */
+        .header-btn {
+            background-color: var(--highlight-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-btn:hover {
+            border-color: var(--text-accent);
+            color: var(--text-accent);
+        }
+
+        .pin-btn {
+            background: none; border: 1px solid var(--border-color); color: var(--text-main);
+            cursor: pointer; padding: 0 10px; border-radius: 6px; font-size: 1rem;
+            transition: background-color 0.2s; height: 34px; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .pin-btn:hover { background-color: var(--highlight-bg); }
+        .pin-btn.pin-active { background-color: rgba(0, 0, 0, 0.1); }
+
+        select#theme-select {
+            padding: 0 12px; border-radius: 6px; border: 1px solid var(--border-color);
+            background-color: var(--bg-card); color: var(--text-main);
+            cursor: pointer; font-family: inherit; height: 34px;
+        }
+
+        /* --- Section Navigation --- */
+        .section-nav { display: flex; gap: 10px; flex-wrap: wrap; }
+        .section-nav button {
+            background-color: var(--highlight-bg); color: var(--text-main);
+            border: 1px solid var(--border-color); padding: 6px 12px;
+            border-radius: 6px; cursor: pointer; font-size: 0.85rem;
+            font-weight: 500; transition: all 0.2s;
+        }
+        .section-nav button:hover { border-color: var(--text-accent); color: var(--text-accent); }
+
+        /* --- Main Content --- */
+        .container {
+            max-width: 850px;
+            margin: 2rem auto;
+            padding: 0 1rem 4rem 1rem;
+        }
+
+        .section-header {
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--text-accent);
+            color: var(--text-accent);
+            font-size: 1.5rem;
+            font-weight: 700;
+            scroll-margin-top: 150px; /* Offset for sticky header */
+        }
+
+        /* --- Question Card --- */
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .lo-box {
+            background-color: var(--highlight-bg);
+            border-left: 4px solid var(--text-accent);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: italic;
+            display: none; /* Hidden by default */
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Options --- */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: var(--highlight-bg);
+            border-color: var(--text-muted);
+        }
+
+        .option-label input {
+            margin-top: 0.3rem;
+            margin-right: 1rem;
+            accent-color: var(--text-accent);
+            transform: scale(1.2);
+        }
+
+        /* --- Buttons --- */
+        .btn-check {
+            margin-top: 1.5rem;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-check:hover {
+            opacity: 0.9;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-link:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Feedback Area --- */
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: none; /* Hidden by default */
+            border: 1px solid transparent;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.correct {
+            background-color: var(--feedback-success-bg);
+            border-color: var(--feedback-success-border);
+            color: var(--feedback-success-text);
+        }
+
+        .feedback.incorrect {
+            background-color: var(--feedback-error-bg);
+            border-color: var(--feedback-error-border);
+            color: var(--feedback-error-text);
+        }
+
+        .feedback-header {
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .rationale {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .source {
+            display: block;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            font-style: italic;
+            border-top: 1px dashed currentColor;
+            padding-top: 0.5rem;
+        }
+
+        /* --- Mobile Tweaks --- */
+        @media (max-width: 768px) {
+            .header-top { flex-direction: column; align-items: flex-start; }
+            .controls-wrapper { width: 100%; justify-content: flex-start; }
+            .section-nav { justify-content: flex-start; }
+            .custom-builder { justify-content: flex-start; }
+            header h1 { font-size: 1.25rem; }
+            #reveal-all-container { justify-content: flex-start !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <div class="header-top">
+            <h1>Week 39 Practice Quiz 1</h1>
+            <div class="controls-wrapper">
+                
+                <!-- Reveal LOs Button -->
+                <button id="reveal-all-btn" class="header-btn" onclick="toggleAllLOs()">Show Learning Objectives</button>
+                
+                <!-- Pin Button -->
+                <button class="pin-btn pin-active" id="pin-btn" onclick="toggleHeader()" title="Pin/Unpin Header">📌</button>
+                
+                <!-- Theme Selector -->
+                <div class="theme-control">
+                    <select id="theme-select" onchange="changeTheme(this.value)">
+                        <option value="dark">Modern Dark</option>
+                        <option value="midnight">Midnight</option>
+                        <option value="light">Modern Light</option>
+                        <option value="legacy-dark">Legacy Dark</option>
+                        <option value="sepia">Sepia</option>
+                        <option value="contrast">High Contrast</option>
+                        <option value="custom">⚙️ Custom...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Custom Theme Color Pickers -->
+            <div class="custom-builder" id="custom-builder">
+                <div class="color-picker-group">
+                    <label>Background:</label>
+                    <input type="color" id="color-bg" value="#1a1a2e" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Cards:</label>
+                    <input type="color" id="color-card" value="#16213e" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Text:</label>
+                    <input type="color" id="color-text" value="#e94560" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Accent:</label>
+                    <input type="color" id="color-accent" value="#0f3460" oninput="updateCustomTheme()">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dynamic Navigation Bar -->
+        <div class="section-nav" id="section-nav"></div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-root">
+            <!-- Content injected via JS -->
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const quizData =[
+            // --- Section 1: Histology of the Liver, Pancreas, and Gallbladder ---
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO1: Discuss the component cellular composition of the liver, including hepatocytes, Kupffer cells, endothelial cells and hepatic stellate (Ito cells), and their structural organization (hepatic cell cords and sinusoids).",
+                question: "A 45-year-old man presents to the emergency department with fever and chills. Blood cultures reveal a systemic bacterial infection. As portal blood flows through his liver, resident macrophages rapidly phagocytize and destroy the invading bacteria within the sinusoidal luminal space. Which of the following cells is responsible for this innate immune response?",
+                options: {
+                    A: "Centroacinar cells",
+                    B: "Hepatic stellate cells",
+                    C: "Hepatocytes",
+                    D: "Kupffer cells",
+                    E: "Sinusoidal endothelial cells"
+                },
+                correctAnswer: "D",
+                rationale: "Kupffer cells are the resident macrophages of the liver located within the sinusoidal luminal space. They play a key role in innate immune responses, host defense, and eating bacteria and effete RBCs.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 13: \"Kupffer cells • Locate within sinusoidal luminal space... Resident macrophages eat bacteria and effete RBCs... Play a key role in innate immune responses and host defense.\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO1: Discuss the component cellular composition of the liver, including hepatocytes, Kupffer cells, endothelial cells and hepatic stellate (Ito cells), and their structural organization (hepatic cell cords and sinusoids).",
+                question: "A 55-year-old man with a long history of severe alcohol use disorder presents with ascites and jaundice. A liver biopsy demonstrates cirrhosis characterized by extensive fibrosis and the deposition of an extracellular matrix. Which of the following cells, normally residing in the space of Disse, is the principal fibrogenic cell responsible for this matrix production?",
+                options: {
+                    A: "Centroacinar cells",
+                    B: "Hepatic stellate cells",
+                    C: "Hepatocytes",
+                    D: "Kupffer cells",
+                    E: "Sinusoidal endothelial cells"
+                },
+                correctAnswer: "B",
+                rationale: "Hepatic stellate cells (Ito cells) reside in the space of Disse and are the principal fibrogenic cells of the liver. After necrosis, they participate in regeneration, which can result in fibrosis.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 14: \"The Hepatic Stellate Cell (HSC)... HSCs reside in space of Disse... HSCs are the principal fibrogenic cells of the liver. Normally produce extracellular matrix, reticular fiber.\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO2: Discuss the structure of portal triads: branches of the portal vein, hepatic artery (as an arteriole), lymphatics, and bile ducts.",
+                question: "A 40-year-old woman undergoes a diagnostic liver biopsy. A pathologist examining the slide under high magnification focuses on a portal triad to assess for portal inflammation. Which of the following structures is a normal anatomic component of the portal triad?",
+                options: {
+                    A: "Central vein",
+                    B: "Hepatic artery branch",
+                    C: "Hepatic vein branch",
+                    D: "Sinusoidal capillary",
+                    E: "Space of Disse"
+                },
+                correctAnswer: "B",
+                rationale: "The portal triad consists of branches of the portal vein, hepatic artery, and bile duct (along with lymphatic vessels).",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 19: \"Portal Triad (PT): Branches of portal vein, hepatic artery and bile duct\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO2: Discuss the structure of portal triads: branches of the portal vein, hepatic artery (as an arteriole), lymphatics, and bile ducts.",
+                question: "A 50-year-old man undergoes an angiographic study to evaluate hepatic hemodynamics. The radiologist traces the flow of blood entering the hepatic sinusoids directly from the distributing vessels. Blood in the sinusoids is a mixture that includes venous blood arriving directly from which of the following structures located in the portal triad?",
+                options: {
+                    A: "Bile canaliculus",
+                    B: "Central vein",
+                    C: "Hepatic vein",
+                    D: "Inferior vena cava",
+                    E: "Portal vein branch"
+                },
+                correctAnswer: "E",
+                rationale: "Blood flows from the branches of the hepatic portal vein (and hepatic artery) located in the portal triad into the sinusoids.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 8: \"Blood Flows from branches of the Hepatic Portal Vein, located in Portal Triad, via Sinusoids to Central Vein\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO3: Describe the flow of blood and of bile in relation to the plates of hepatocytes in each type of hepatic lobule.",
+                question: "A 35-year-old woman participates in a physiologic study tracking biliary flow. A radioactive tracer excreted by hepatocytes into the bile is monitored over time. Within a classic liver lobule, the tracer within the bile canaliculi will flow in which of the following directions?",
+                options: {
+                    A: "Away from the central vein towards the portal triad",
+                    B: "Away from the portal triad towards the central vein",
+                    C: "From the hepatic artery directly into the sinusoids",
+                    D: "From the space of Disse into the central vein",
+                    E: "Parallel and in the same direction as the flow of sinusoidal blood"
+                },
+                correctAnswer: "A",
+                rationale: "In the liver lobule, bile flows in the opposite direction of blood flow. Blood flows towards the central vein, while bile flows away from the central vein towards the bile ducts in the portal triad.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 15: \"Bile Flows in Opposite Direction, in Bile Canaliculi away from Central Vein towards Portal Triad\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO3: Describe the flow of blood and of bile in relation to the plates of hepatocytes in each type of hepatic lobule.",
+                question: "A 60-year-old man with chronic liver disease undergoes imaging to evaluate sinusoidal blood flow. In a normal, healthy liver lobule, mixed blood from the portal triad flows through the sinusoids directly toward which of the following structures?",
+                options: {
+                    A: "Bile ductule",
+                    B: "Central vein",
+                    C: "Hepatic artery",
+                    D: "Portal vein",
+                    E: "Space of Disse"
+                },
+                correctAnswer: "B",
+                rationale: "Blood from the branches of the portal vein and hepatic artery in the portal triad flows through the sinusoids and drains directly into the central vein.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 8: \"Blood Flows from branches of the Hepatic Portal Vein, located in Portal Triad, via Sinusoids to Central Vein\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO4: Discuss the concept of the classic liver lobule and contrast with the hepatic acinus.",
+                question: "A 25-year-old man presents to the emergency department after a massive intentional overdose of acetaminophen. A subsequent liver biopsy reveals extensive hepatocyte necrosis. The pathologist notes that the cell death is pericentral, affecting the cells farthest away from the distributing vasculature that are most susceptible to drug toxicity. This specific region of necrosis corresponds to which of the following areas?",
+                options: {
+                    A: "Zone 1 of the hepatic acinus",
+                    B: "Zone 2 of the hepatic acinus",
+                    C: "Zone 3 of the hepatic acinus",
+                    D: "The exact center of the portal triad",
+                    E: "The periphery of the classic liver lobule"
+                },
+                correctAnswer: "C",
+                rationale: "Zone 3 (pericentral) of the hepatic acinus is the farthest away from the distributing vasculature. It is poorly oxygenated and is the site of most drug detoxification, making it the first area to die in drug overload (like acetaminophen).",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 28: \"Zone 3 (pericentral): farthest away from distributing vasculature. poorly oxygenated, is the site of most drug and alcohol detoxification. Therefore the first to die in ischemia or drug overload!\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO4: Discuss the concept of the classic liver lobule and contrast with the hepatic acinus.",
+                question: "A 45-year-old woman develops a severe viral hepatitis infection. A liver biopsy shows the most significant inflammation and hepatocyte injury in the periportal areas, which are the first to receive oxygen, hormones, and nutrients from the bloodstream. Based on the functional model of liver architecture, this injury is primarily located in which of the following regions?",
+                options: {
+                    A: "Zone 1 of the hepatic acinus",
+                    B: "Zone 2 of the hepatic acinus",
+                    C: "Zone 3 of the hepatic acinus",
+                    D: "The area immediately adjacent to the central vein",
+                    E: "The exact center of the classic liver lobule"
+                },
+                correctAnswer: "A",
+                rationale: "Zone 1 (periportal) of the hepatic acinus is the first to receive oxygen, hormones, and nutrients from the bloodstream. It is the most susceptible to viral infection.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 28: \"Zone 1 (periportal): first receives oxygen, hormones, and nutrients from the bloodstream... Most susceptible to viral infection.\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO5: Describe the histological features of the gallbladder",
+                question: "A 45-year-old woman undergoes a cholecystectomy for recurrent biliary colic. The pathologist examines a microscopically normal section of the gallbladder wall. The innermost mucosal lining of this organ is typically composed of which of the following types of epithelium?",
+                options: {
+                    A: "Pseudostratified ciliated columnar epithelial cells",
+                    B: "Simple columnar epithelial cells",
+                    C: "Simple cuboidal epithelial cells",
+                    D: "Simple squamous epithelial cells",
+                    E: "Transitional epithelial cells"
+                },
+                correctAnswer: "B",
+                rationale: "The mucosal lining of the gallbladder consists of columnar epithelial cells.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 32: \"GALL BLADDER columnar epithelial cells\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO5: Describe the histological features of the gallbladder",
+                question: "A 50-year-old man undergoes elective surgical removal of his gallbladder. A histological section of the gallbladder wall reveals prominent mucosal folds and a well-defined contractile layer. Which of the following tissue types makes up the primary contractile layer of the gallbladder wall?",
+                options: {
+                    A: "Dense regular connective tissue",
+                    B: "Hyaline cartilage",
+                    C: "Skeletal muscle",
+                    D: "Smooth muscle",
+                    E: "Stratified squamous epithelium"
+                },
+                correctAnswer: "D",
+                rationale: "Histologically, the gallbladder wall contains prominent mucosal folds, an adventitia, and a smooth muscle layer, which contracts to release bile.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 31 & 32: \"The Gall Bladder, a Bile storage site... Mucosal folds... Smooth muscle\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO6: Discuss the endocrine part (islets of Langerhans) of the pancreas within exocrine part",
+                question: "A 30-year-old man is being evaluated for recurrent episodes of hypoglycemia. Imaging suggests a small neuroendocrine tumor within the pancreas. The surgeon plans a partial pancreatectomy, targeting the anatomical region where the normal, pale-staining spherical collections of endocrine cells (Islets of Langerhans) are most numerous. Which of the following areas of the pancreas will be primarily targeted?",
+                options: {
+                    A: "Body",
+                    B: "Head",
+                    C: "Major pancreatic duct",
+                    D: "Neck",
+                    E: "Tail"
+                },
+                correctAnswer: "E",
+                rationale: "The islets of Langerhans comprise the endocrine part of the pancreas. They make up 2-4% of pancreatic tissue and are most numerous in the tail of the pancreas.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 40: \"Endocrine part of Pancreas: Islets of Langerhans... 2-4% of pancreatic tissue, most numerous in the tail of pancreas.\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO6: Discuss the endocrine part (islets of Langerhans) of the pancreas within exocrine part",
+                question: "A 55-year-old woman has a pancreatic tissue biopsy performed during an exploratory laparotomy. Microscopic examination reveals islets of Langerhans scattered among the exocrine acini. The pathologist notes that each individual islet is supported and enveloped by a specific structural component. Which of the following best describes this supportive component?",
+                options: {
+                    A: "Dense regular connective tissue capsule",
+                    B: "Elastic fiber network",
+                    C: "Interlobular connective tissue septa",
+                    D: "Reticular fibers",
+                    E: "Smooth muscle layer"
+                },
+                correctAnswer: "D",
+                rationale: "Each individual islet of Langerhans is surrounded and supported by reticular fibers, distinguishing them from the larger lobules which are separated by connective tissue (CT) septa.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 40: \"Each islet is surrounded and supported by reticular fibers.\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO7: Describe the histological features of pancreatic acini and duct system.",
+                question: "A 40-year-old man consumes a heavy meal. In response, the functional units of his exocrine pancreas actively secrete a fluid rich in digestive enzymes. Histological examination of these pyramidal-shaped acinar cells demonstrates an intensely basophilic basal region and an acidophilic apical region. The intense basophilia of the basal part of the cell is primarily due to an abundance of which of the following organelles?",
+                options: {
+                    A: "Golgi apparatus",
+                    B: "Lysosomes",
+                    C: "Mitochondria",
+                    D: "Rough endoplasmic reticulum",
+                    E: "Secretory granules"
+                },
+                correctAnswer: "D",
+                rationale: "Pancreatic acinar cells have a basophilic basal part due to abundant rough endoplasmic reticulum (rER), which is necessary for synthesizing the large amounts of digestive enzymes. The apical part is acidophilic due to the secretory granules.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 35: \"Pancreatic Acinar Cells... Cytoplasm: Basal part Basophilic (due to abundant rER). Apical part Acidophilic (due to secretory granules)\""
+            },
+            {
+                section: "Histology of the Liver, Pancreas, and Gallbladder",
+                fullLO: "LO7: Describe the histological features of pancreatic acini and duct system.",
+                question: "A 45-year-old woman undergoes a pancreatic biopsy. The pathologist evaluates the duct system, noting the transition from the secretory endpieces to the intercalated ducts. Which of the following cells represent the direct extension of the intercalated duct penetrating into the center of the pancreatic acinus?",
+                options: {
+                    A: "Alpha cells",
+                    B: "Beta cells",
+                    C: "Centroacinar cells",
+                    D: "Delta cells",
+                    E: "Pancreatic stellate cells"
+                },
+                correctAnswer: "C",
+                rationale: "Centroacinar cells are located in the center of the acinus and represent the beginning of the duct system; they are the extension of the intercalated duct into each pancreatic acinus.",
+                source: "Histology of Liver, Gallbladder, Pancreas.pdf, Slide 36: \"Centroacinar cells: extension of the intercalated duct into each pancreatic acinus\""
+            },
+
+            // --- Section 2: Physiology of Liver and Biliary Tree ---
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO1: Explain the polarization of hepatocytes in terms of canalicular membrane and sinusoidal membrane.",
+                question: "A healthy 42-year-old woman is participating in a metabolic study. Researchers analyze the active transport of newly synthesized bile acids out of her hepatocytes. This specific secretion process occurs across a specialized domain of the hepatocyte cell membrane that lies directly between adjacent hepatocytes. Which of the following is the correct term for this specific membrane domain?",
+                options: {
+                    A: "Basolateral membrane",
+                    B: "Canalicular membrane",
+                    C: "Endothelial fenestration",
+                    D: "Kupffer cell border",
+                    E: "Sinusoidal membrane"
+                },
+                correctAnswer: "B",
+                rationale: "The canalicular membrane of the hepatocyte lies between adjacent hepatocytes. Secretions across this highly specialized canalicular membrane form bile.",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 8: \"Details of the liver lobule • Canalicular membrane lies between adjacent hepatocytes • Secretions across the canalicular membrane form bile\""
+            },
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO1: Explain the polarization of hepatocytes in terms of canalicular membrane and sinusoidal membrane.",
+                question: "A 35-year-old man has normal liver function. Bilirubin attached to albumin circulating in his bloodstream easily passes out of the capillary lumen to reach the surface of the hepatocyte. This passage is facilitated by the presence of large fenestrations (0.1µm to 1µm) and the absence of a basement membrane in which of the following structures?",
+                options: {
+                    A: "Bile canaliculus",
+                    B: "Central vein",
+                    C: "Hepatic artery",
+                    D: "Hepatic sinusoid",
+                    E: "Intercalated duct"
+                },
+                correctAnswer: "D",
+                rationale: "The sinusoidal membrane is highly fenestrated (due to sinusoidal endothelial cells lacking tight junctions and a basement membrane), allowing everything except red blood cells to pass freely, including albumin-bound bilirubin.",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 9: \"Sinusoidal membrane is fenestrated: • Due to sinusoidal endothelial cells • Everything except RBC pass freely\""
+            },
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO2: Discuss metabolic functions of the livers, including carbohydrate, fat, and protein metabolism.",
+                question: "A 28-year-old man has been fasting for 24 hours in preparation for a medical procedure. To prevent his blood glucose levels from dropping too low (hypoglycemia), his liver converts large amounts of amino acids and glycerol into glucose. Which of the following terms best describes this sustained metabolic response?",
+                options: {
+                    A: "Beta-oxidation",
+                    B: "Deamination",
+                    C: "Gluconeogenesis",
+                    D: "Glycogenesis",
+                    E: "Glycolysis"
+                },
+                correctAnswer: "C",
+                rationale: "Gluconeogenesis is the generation of glucose from non-carbohydrates (such as glucogenic amino acids and glycerol) and is a major mechanism in the liver to maintain blood glucose during fasting.",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 12: \"Gluconeogenesis, results in the generation of glucose from non-carbohydrates such as glucogenic amino acids... One of major mechanisms to keep blood glucose levels from dropping too low (hypoglycemia).\""
+            },
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO2: Discuss metabolic functions of the livers, including carbohydrate, fat, and protein metabolism.",
+                question: "A 45-year-old woman is on a strict ketogenic diet with very low carbohydrate intake. Her liver exhibits a high rate of fatty acid oxidation. During this process, fatty acids are broken down to acetyl CoA, which subsequently undergoes a condensation reaction to form the first ketone body. Which of the following is the first ketone body produced in this pathway?",
+                options: {
+                    A: "3-hydroxybutyrate",
+                    B: "Acetoacetate",
+                    C: "Acetone",
+                    D: "Cholesterol",
+                    E: "Lipoprotein"
+                },
+                correctAnswer: "B",
+                rationale: "In ketone body synthesis, fatty acids are broken down to acetyl CoA. A condensation reaction followed by HMG CoA synthase and lyase yields acetoacetate, which is the first ketone body. It can then be further broken down to acetone and 3-hydroxybutyrate.",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 14: \"Condensation reaction followed by HMG CoA synthase and lyase yield Acetoacetate (the first ketone body)\""
+            },
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO2: Discuss metabolic functions of the livers, including carbohydrate, fat, and protein metabolism.",
+                question: "A 50-year-old man consumes a high-protein meal. In the liver, the amino acids undergo oxidative deamination, which results in the removal of the amine functional group as ammonia. Because ammonia is toxic, the liver rapidly removes it from the circulation by synthesizing which of the following compounds?",
+                options: {
+                    A: "Acetoacetate",
+                    B: "Bilirubin",
+                    C: "Glutamic acid",
+                    D: "Ketone bodies",
+                    E: "Urea"
+                },
+                correctAnswer: "E",
+                rationale: "Ammonia released during the deamination of amino acids is toxic and is removed from the blood almost entirely by conversion into urea in the liver.",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 17: \"The ammonia released during deamination of amino acids is removed from the blood almost entirely by conversion into urea. Essentially all urea formed in the human body is synthesized in the liver.\""
+            },
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO3: Explain bilirubin formation and excretion.",
+                question: "A healthy 2-day-old neonate develops a yellowish tint to his skin and the sclera of his eyes. Laboratory testing shows a moderate unconjugated hyperbilirubinemia. The pediatrician reassures the parents that this is a common condition that typically resolves within 1 week without treatment. This transient hyperbilirubinemia is primarily due to an inability of the immature liver to conjugate bilirubin because of a delay in the expression of which of the following enzymes?",
+                options: {
+                    A: "Biliverdin reductase",
+                    B: "Glucokinase",
+                    C: "Heme oxygenase",
+                    D: "UDP glucuronyl transferase",
+                    E: "Urobilinogen synthase"
+                },
+                correctAnswer: "D",
+                rationale: "Neonatal jaundice is caused by a delay in the expression of UDP glucuronyl transferase, the enzyme responsible for conjugating bilirubin with glucuronic acid in the liver to make it water-soluble.",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 24: \"Neonatal Jaundice • In newborns there is a delay in the expression of UDP glucuronyl transferase leading to Jaundice\""
+            },
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO3: Explain bilirubin formation and excretion.",
+                question: "A 55-year-old woman presents with right upper quadrant pain, yellowing of the skin, and dark brown urine. She also reports her stools have recently become pale and clay-colored. Ultrasound reveals a gallstone completely obstructing the common bile duct. The abnormally dark brown color of her urine is primarily due to the renal excretion of which of the following substances?",
+                options: {
+                    A: "Conjugated bilirubin",
+                    B: "Free hemoglobin",
+                    C: "Stercobilin",
+                    D: "Unconjugated bilirubin",
+                    E: "Urobilinogen"
+                },
+                correctAnswer: "A",
+                rationale: "In obstructive jaundice (e.g., from a gallstone), the liver conjugates bilirubin normally, but it cannot be secreted into the intestine. The soluble conjugated bilirubin builds up in the plasma and is shunted to renal excretion, causing dark brown urine.",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 26: \"Obstructive Jaundice: ... Since liver conjugates bilirubin, conjugated bilirubin builds up in the plasma. Because conjugated bilirubin is water soluble, it can be excreted in the urine(dark brown coloration).\""
+            },
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO4: Discuss the composition of bile and the transporters in the canalicular membrane that are responsible for secretion of the various bile components.",
+                question: "A 40-year-old man consumes a meal high in fat. Bile salts are subsequently released into his duodenum to aid in the emulsification of the lipids. The ability of bile salts to solubilize fats is critically dependent on their chemical structure, which contains both hydrophobic and hydrophilic domains. Which of the following terms best describes this structural property?",
+                options: {
+                    A: "Amphipathic",
+                    B: "Isomeric",
+                    C: "Lipophobic",
+                    D: "Monosaccharide",
+                    E: "Proteolytic"
+                },
+                correctAnswer: "A",
+                rationale: "Bile salts are critical for lipid digestion because of their amphipathic nature, meaning they contain both hydrophobic and hydrophilic domains, allowing them to emulsify and solubilize fats.",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 29: \"Bile Salts • Amphipathic nature critical in solubilizing fats • Amphipathic: contains both hydrophobic and hydrophilic domains\""
+            },
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO4: Discuss the composition of bile and the transporters in the canalicular membrane that are responsible for secretion of the various bile components.",
+                question: "A researcher is studying the enterohepatic circulation of bile acids in healthy human volunteers. She tracks the synthesis and transport of primary bile acids within the digestive system. In the hepatocyte, primary bile acids are synthesized directly from which of the following precursor molecules?",
+                options: {
+                    A: "Amino acids",
+                    B: "Bilirubin",
+                    C: "Cholesterol",
+                    D: "Phospholipids",
+                    E: "Triglycerides"
+                },
+                correctAnswer: "C",
+                rationale: "Primary bile acids are synthesized directly from cholesterol within the hepatocyte (up to 80% of cholesterol is converted into bile salts).",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 30: \"Synthesis of Bile Acids • Primary bile acids are synthesized from cholesterol in the hepatocyte\""
+            },
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO5: Discuss the role of gallbladder in concentrating bile and coordinating its secretion when nutrients reach duodenal lumen.",
+                question: "A 35-year-old woman eats a cheeseburger. As the partially digested food enters her small intestine, the intestinal mucosa produces Cholecystokinin (CCK). CCK facilitates the flow of bile into the duodenum by causing relaxation of the sphincter of Oddi and directly stimulating which of the following actions?",
+                options: {
+                    A: "Gallbladder contraction",
+                    B: "Hepatic artery vasodilation",
+                    C: "Hepatocyte proliferation",
+                    D: "Pancreatic bicarbonate secretion",
+                    E: "Stomach proximal relaxation"
+                },
+                correctAnswer: "A",
+                rationale: "CCK is released from the intestinal mucosa and acts via the CCK1 receptor to stimulate gallbladder contraction and relaxation of the sphincter of Oddi, resulting in bile flow into the duodenum.",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 41: \"Physiological effects 1. Stimulation gall bladder contraction 2. Relaxation sphincter of Oddi\""
+            },
+            {
+                section: "Physiology of Liver and Biliary Tree",
+                fullLO: "LO5: Discuss the role of gallbladder in concentrating bile and coordinating its secretion when nutrients reach duodenal lumen.",
+                question: "A 50-year-old man has a normal abdominal ultrasound. The physician explains that between meals, his liver constantly produces bile, which is then stored and concentrated in the gallbladder. While liver bile contains a bile salt concentration of 1.1 g/dl, the gallbladder concentrates the bile salts to approximately which of the following concentrations?",
+                options: {
+                    A: "0.04 g/dl",
+                    B: "0.12 g/dl",
+                    C: "1.5 g/dl",
+                    D: "6 g/dl",
+                    E: "92 g/dl"
+                },
+                correctAnswer: "D",
+                rationale: "Bile salts are stored and concentrated in the gallbladder. Table 65-2 demonstrates that the concentration of bile salts increases from 1.1 g/dl in Liver Bile to 6 g/dl in Gallbladder Bile.",
+                source: "Physiology of the Liver and Biliary Tree.pdf, Slide 31: \"Bile salts are stored and concentrated in the gallbladder ... Table 65-2 Composition of Bile ... Bile salts | Liver Bile 1.1 g/dl | Gallbladder Bile 6 g/dl\""
+            },
+
+            // --- Section 3: Physiology of the Pancreas ---
+            {
+                section: "Physiology of the Pancreas",
+                fullLO: "LO1: Understand the functional anatomy of the endocrine pancreas",
+                question: "A 30-year-old healthy man has a normal fasting blood glucose level. His endocrine pancreas tightly regulates his metabolism through the secretion of various hormones. Histological analysis of his pancreatic islets of Langerhans would reveal that the predominant cell type, making up approximately two-thirds (2/3) of the cells, is which of the following?",
+                options: {
+                    A: "Alpha cells",
+                    B: "Beta cells",
+                    C: "D cells",
+                    D: "F cells",
+                    E: "Gamma cells"
+                },
+                correctAnswer: "B",
+                rationale: "Within the Islets of Langerhans, beta cells predominate, making up approximately 2/3 of the cells, followed by alpha cells (1/4), and the balance composed of other cells (D or F cells).",
+                source: "The Endocrine Functions of the Pancreas.pdf, Slide 3: \"Functional Units of the Endocrine Pancreas... β cells predominate (2/3) followed by α cells (1/4)\""
+            },
+            {
+                section: "Physiology of the Pancreas",
+                fullLO: "LO1: Understand the functional anatomy of the endocrine pancreas",
+                question: "A pathologist is examining an entire human pancreas following an autopsy. She specifically isolates the richly vascularized regions responsible for hormone production, known as the Islets of Langerhans. These functional units of the endocrine pancreas comprise approximately what percentage of the total pancreatic mass?",
+                options: {
+                    A: "2%",
+                    B: "10%",
+                    C: "25%",
+                    D: "50%",
+                    E: "90%"
+                },
+                correctAnswer: "A",
+                rationale: "The islets of Langerhans comprise only about 2% of the total pancreatic mass but are richly vascularized to facilitate their endocrine function.",
+                source: "The Endocrine Functions of the Pancreas.pdf, Slide 3: \"Islet comprise ~2% of the total pancreatic mass and richly vascularized\""
+            },
+            {
+                section: "Physiology of the Pancreas",
+                fullLO: "LO2: Understand the central role of insulin in whole body glucose homeostasis, including organ specific mechanisms.",
+                question: "A 25-year-old man consumes a large carbohydrate-rich meal. Consequently, his insulin levels rise, causing a massive uptake of glucose into his liver cells (hepatocytes). Within the liver, insulin specifically regulates the balance between glucose storage and production by directly activating which of the following enzymes to facilitate glucose uptake?",
+                options: {
+                    A: "Glucokinase",
+                    B: "Glycogen phosphorylase",
+                    C: "Lipase",
+                    D: "PEPCK",
+                    E: "Tyrosine kinase"
+                },
+                correctAnswer: "A",
+                rationale: "In the liver, insulin specifically activates glucokinase to facilitate glucose uptake. It also activates glycogen synthase and inactivates glycogen phosphorylase.",
+                source: "The Endocrine Functions of the Pancreas.pdf, Slide 15: \"Insulin In the Liver... Specific Actions include: • Massive Glucose Uptake... • Activates glucokinase, facilitating uptake\""
+            },
+            {
+                section: "Physiology of the Pancreas",
+                fullLO: "LO2: Understand the central role of insulin in whole body glucose homeostasis, including organ specific mechanisms.",
+                question: "A 40-year-old woman rests after eating a heavy lunch. Her circulating insulin promotes glucose clearance, the vast bulk of which occurs in skeletal muscle, liver, and fat tissue. In skeletal muscle cells, insulin specifically increases glucose uptake by causing the translocation of which of the following transporters to the cell membrane?",
+                options: {
+                    A: "GLUT1",
+                    B: "GLUT2",
+                    C: "GLUT3",
+                    D: "GLUT4",
+                    E: "GLUT5"
+                },
+                correctAnswer: "D",
+                rationale: "The mechanism of insulin to increase glucose uptake in muscle cells is causing the translocation of GLUT4 transporters to the membrane.",
+                source: "The Endocrine Functions of the Pancreas.pdf, Slide 14: \"Insulin In Muscle Tissues... The mechanism of insulin to increase glucose uptake is causing the translocation to the membrane of glucose transporters (Glut 4 in this case).\""
+            },
+            {
+                section: "Physiology of the Pancreas",
+                fullLO: "LO3: Understand the chemical nature of insulin, determinants of its release and cellular mechanisms of action.",
+                question: "A 22-year-old woman has a blood sample drawn for an endocrine panel. The laboratory measures the levels of a specific peptide that is cleaved from proinsulin and subsequently stored in pancreatic secretory granules. This peptide is released in equal amounts alongside insulin. Which of the following is this peptide?",
+                options: {
+                    A: "Amylin",
+                    B: "C-Peptide",
+                    C: "Glucagon",
+                    D: "Preproinsulin",
+                    E: "Somatostatin"
+                },
+                correctAnswer: "B",
+                rationale: "Proinsulin is cleaved into insulin and C-peptide. Pancreatic secretory granules contain equal amounts of insulin and C-Peptide, which are co-secreted.",
+                source: "The Endocrine Functions of the Pancreas.pdf, Slide 6: \"Proinsulin (MW= ~9000) is cleaved into insulin... and C-peptide... Pancreatic Secretory Granules contain equal amounts of insulin and C-Peptide along with a small amount of proinsulin\""
+            },
+            {
+                section: "Physiology of the Pancreas",
+                fullLO: "LO3: Understand the chemical nature of insulin, determinants of its release and cellular mechanisms of action.",
+                question: "A 35-year-old man eats a sugary snack. As his blood glucose rises, glucose enters his pancreatic beta cells via GLUT2 transporters. The abundant utilization of this glucose generates high levels of ATP. In the mechanism of glucose-stimulated insulin secretion, this increase in intracellular ATP directly causes which of the following immediate events?",
+                options: {
+                    A: "Activation of glycogen phosphorylase",
+                    B: "Cleavage of the leader sequence in the endoplasmic reticulum",
+                    C: "Opening of voltage-dependent calcium channels",
+                    D: "Phosphorylation of the alpha subunit of the insulin receptor",
+                    E: "Shutting off of the ATP-gated potassium channel"
+                },
+                correctAnswer: "E",
+                rationale: "In glucose-stimulated insulin secretion, the generation of ATP shuts off the ATP-gated potassium channel, which depolarizes the membrane. This depolarization subsequently results in calcium entry and vesicle exocytosis.",
+                source: "The Endocrine Functions of the Pancreas.pdf, Slide 5: \"Glucose-Stimulated Insulin Secretion... Utilization of abundant glucose results in abundant ATP... ATP shuts off ATP-gated potassium channel and depolarizes membrane\""
+            },
+            {
+                section: "Physiology of the Pancreas",
+                fullLO: "LO4: Understand at a broad level the actions of insulin above and beyond glycemic control.",
+                question: "An 18-year-old male bodybuilder consumes a whey protein shake after a workout. The resulting insulin spike acts as a primary stimulus for anabolic protein metabolism in his muscle cells. Which of the following best describes an expected cellular effect of insulin regarding this protein metabolism?",
+                options: {
+                    A: "Decreased cellular uptake of valine and leucine",
+                    B: "Increased protein breakdown",
+                    C: "Increased translation at the level of mRNA",
+                    D: "Inhibition of gene expression",
+                    E: "Stimulation of hepatic gluconeogenesis"
+                },
+                correctAnswer: "C",
+                rationale: "Insulin is a primary stimulus for anabolic protein metabolism. Its effects include increased uptake of amino acids, increased protein synthesis (increased translation at the level of mRNA), increased gene expression, and inhibition of protein breakdown.",
+                source: "The Endocrine Functions of the Pancreas.pdf, Slide 17: \"Insulin and Protein... Effects include: • Increased uptake of amino acids into cells... • Increased protein synthesis – increases translation at the level of the mRNA.\""
+            },
+            {
+                section: "Physiology of the Pancreas",
+                fullLO: "LO4: Understand at a broad level the actions of insulin above and beyond glycemic control.",
+                question: "A researcher is studying the intracellular signaling cascades of the insulin receptor in human fibroblasts. She notes that in addition to regulating energy status, insulin acts in a cytokine-like manner to modulate cell function, inhibit growth, and regulate apoptosis. Which of the following downstream signaling molecules is most directly activated by IRS-1 to mediate these specific survival and growth pathways?",
+                options: {
+                    A: "Adenylyl cyclase",
+                    B: "cAMP",
+                    C: "Glucokinase",
+                    D: "PI3K",
+                    E: "Protein kinase A (PKA)"
+                },
+                correctAnswer: "D",
+                rationale: "The insulin signaling pathway involves IRS-1 activating PI3K, which then acts on downstream targets like Akt, mTOR, and BAD to regulate protein synthesis and apoptosis. Extent of these non-metabolic actions is poorly understood but heavily relies on this pathway.",
+                source: "The Endocrine Functions of the Pancreas.pdf, Slide 18: \"Insulin Signaling More than Metabolism... In addition to regulating energy status, insulin can act in a cytokine-like manner to inhibit growth and modulate cell function.\" (Diagram shows IRS-1 -> PI3K -> Akt -> mTOR / BAD / apoptosis)."
+            },
+            {
+                section: "Physiology of the Pancreas",
+                fullLO: "LO5: Understand the actions and roles of non-insulin-mediated control of glucose, esp. glucagon and incretins.",
+                question: "A 45-year-old man has not eaten for 8 hours. His blood glucose concentration needs to be strictly maintained to supply glucose-dependent tissues like the brain. In response to falling blood glucose, the \"anti-insulin\" hormone glucagon is secreted. Which of the following is a primary metabolic effect of glucagon?",
+                options: {
+                    A: "Decreased fat breakdown in adipose",
+                    B: "Increased esterification of fatty acids",
+                    C: "Increased gluconeogenesis",
+                    D: "Increased glycogen synthesis",
+                    E: "Increased translation at the level of mRNA"
+                },
+                correctAnswer: "C",
+                rationale: "Glucagon is the \"anti-insulin\" hormone and functions to maintain blood glucose by causing glycogen breakdown, increased gluconeogenesis, and increased fat breakdown in adipose tissue.",
+                source: "The Endocrine Functions of the Pancreas.pdf, Slide 20: \"Role of Glucagon in Sugar Balance... Glucagon is the “anti-insulin” and: • Causes Glycogen Breakdown • Increased Gluconeogenesis\""
+            },
+            {
+                section: "Physiology of the Pancreas",
+                fullLO: "LO5: Understand the actions and roles of non-insulin-mediated control of glucose, esp. glucagon and incretins.",
+                question: "A 55-year-old woman with type 2 diabetes mellitus is prescribed a medication that acts as a GLP-1 receptor agonist. GLP-1 is an incretin peptide normally produced in the L-cells of the intestine and degraded by dipeptidyl peptidase IV (DPP-4). Which of the following is the primary physiologic effect of GLP-1?",
+                options: {
+                    A: "Augments glucose-dependent insulin secretion",
+                    B: "Decreases muscle glycogen synthesis",
+                    C: "Increases glucagon secretion",
+                    D: "Increases post-prandial gluconeogenesis",
+                    E: "Stimulates the breakdown of muscle protein"
+                },
+                correctAnswer: "A",
+                rationale: "Incretins like GLP-1 are produced in the intestine and act to augment glucose-dependent insulin secretion and inhibit glucagon secretion.",
+                source: "The Endocrine Functions of the Pancreas.pdf, Slide 22: \"Incretins • A major novel way in which glucagon is regulated is incretin peptides. • Produced in L-cells in the intestine, GLP-1 augments glucose-dependent insulin secretion and inhibits glucagon secretion by GLP receptors.\""
+            }
+        ];
+
+        // --- Core Logic ---
+        const quizRoot = document.getElementById('quiz-root');
+        const themeSelect = document.getElementById('theme-select');
+        const pinBtn = document.getElementById('pin-btn');
+        const mainHeader = document.getElementById('main-header');
+        const sectionNav = document.getElementById('section-nav');
+        const customBuilder = document.getElementById('custom-builder');
+        const rootElements = document.documentElement;
+
+        let isRevealed = false;
+
+        function toggleAllLOs() {
+            isRevealed = !isRevealed;
+            const btn = document.getElementById('reveal-all-btn');
+            btn.textContent = isRevealed ? "Hide Learning Objectives" : "Show Learning Objectives";
+            
+            document.querySelectorAll('.lo-box').forEach(box => {
+                box.style.display = isRevealed ? 'block' : 'none';
+            });
+        }
+
+        function initQuiz() {
+            let currentSection = "";
+            let sectionIndex = 0;
+            
+            quizData.forEach((item, index) => {
+                if (item.section !== currentSection) {
+                    currentSection = item.section;
+                    
+                    const sectionId = 'sec-' + sectionIndex;
+                    
+                    const sectionHeader = document.createElement('h2');
+                    sectionHeader.className = 'section-header';
+                    sectionHeader.id = sectionId;
+                    sectionHeader.textContent = currentSection;
+                    quizRoot.appendChild(sectionHeader);
+
+                    const navBtn = document.createElement('button');
+                    let btnText = currentSection;
+                    if (btnText.includes("Histology of the Liver")) btnText = "Liver Histology";
+                    if (btnText.includes("Physiology of Liver")) btnText = "Liver Physiology";
+                    if (btnText.includes("Physiology of the Pancreas")) btnText = "Pancreas Physiology";
+                    
+                    navBtn.textContent = btnText;
+                    navBtn.onclick = () => {
+                        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+                    };
+                    sectionNav.appendChild(navBtn);
+
+                    sectionIndex++;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${index}`;
+
+                const loBox = document.createElement('div');
+                loBox.className = 'lo-box';
+                loBox.id = `lo-${index}`;
+                loBox.innerHTML = item.fullLO;
+                card.appendChild(loBox);
+
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerHTML = `${index + 1}. ${item.question}`;
+                card.appendChild(qText);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                for (const[key, value] of Object.entries(item.options)) {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `question-${index}`;
+                    input.value = key;
+
+                    const span = document.createElement('span');
+                    span.innerHTML = `${key}. ${value}`;
+
+                    label.appendChild(input);
+                    label.appendChild(span);
+                    optionsGrid.appendChild(label);
+                }
+                card.appendChild(optionsGrid);
+
+                const btn = document.createElement('button');
+                btn.className = 'btn-check';
+                btn.textContent = 'Check Answer';
+                btn.onclick = () => checkAnswer(index);
+                card.appendChild(btn);
+
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                feedback.id = `feedback-${index}`;
+                card.appendChild(feedback);
+
+                quizRoot.appendChild(card);
+            });
+
+            const returnContainer = document.createElement('div');
+            returnContainer.style.textAlign = 'center';
+            returnContainer.style.marginTop = '2rem';
+            
+            const returnBtn = document.createElement('a');
+            returnBtn.href = 'https://ibecerramcg.github.io/GI-GU-ENDO-Practice-Quizzes/';
+            returnBtn.className = 'btn-link';
+            returnBtn.textContent = '← Return to Quiz Directory';
+            
+            returnContainer.appendChild(returnBtn);
+            quizRoot.appendChild(returnContainer);
+
+            const savedTheme = localStorage.getItem('quizTheme') || 'dark';
+            themeSelect.value = savedTheme;
+            changeTheme(savedTheme);
+
+            const savedPinState = localStorage.getItem('headerPinned');
+            toggleHeader(savedPinState !== 'false');
+        }
+
+        function checkAnswer(index) {
+            const selected = document.querySelector(`input[name="question-${index}"]:checked`);
+            const feedbackEl = document.getElementById(`feedback-${index}`);
+            const data = quizData[index];
+
+            if (!selected) {
+                alert("Please select an answer.");
+                return;
+            }
+
+            const isCorrect = selected.value === data.correctAnswer;
+            
+            let html = `<span class="feedback-header">${isCorrect ? "Correct!" : "Incorrect"}</span>`;
+            if (!isCorrect) {
+                html += `<div>The correct answer is <strong>${data.correctAnswer}</strong>.</div>`;
+            }
+            
+            html += `<div class="rationale"><strong>Rationale:</strong> ${data.rationale}</div>`;
+            html += `<div class="source"><strong>Source:</strong> ${data.source}</div>`;
+
+            feedbackEl.innerHTML = html;
+            feedbackEl.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedbackEl.style.display = 'block';
+        }
+
+        function changeTheme(themeName) {
+            localStorage.setItem('quizTheme', themeName);
+            
+            if (themeName === 'custom') {
+                rootElements.removeAttribute('data-theme');
+                customBuilder.classList.add('active');
+                loadCustomTheme();
+            } else {
+                rootElements.setAttribute('data-theme', themeName);
+                customBuilder.classList.remove('active');
+                rootElements.removeAttribute('style');
+            }
+        }
+
+        function updateCustomTheme() {
+            const bg = document.getElementById('color-bg').value;
+            const card = document.getElementById('color-card').value;
+            const text = document.getElementById('color-text').value;
+            const accent = document.getElementById('color-accent').value;
+
+            rootElements.style.setProperty('--bg-body', bg);
+            rootElements.style.setProperty('--bg-header', bg);
+            rootElements.style.setProperty('--bg-card', card);
+            rootElements.style.setProperty('--highlight-bg', card);
+            rootElements.style.setProperty('--text-main', text);
+            rootElements.style.setProperty('--text-accent', accent);
+            rootElements.style.setProperty('--button-bg', accent);
+            rootElements.style.setProperty('--button-text', bg);
+            rootElements.style.setProperty('--border-color', accent + '40');
+
+            const customColors = { bg, card, text, accent };
+            localStorage.setItem('customThemeColors', JSON.stringify(customColors));
+        }
+
+        function loadCustomTheme() {
+            const savedColors = JSON.parse(localStorage.getItem('customThemeColors'));
+            if (savedColors) {
+                document.getElementById('color-bg').value = savedColors.bg;
+                document.getElementById('color-card').value = savedColors.card;
+                document.getElementById('color-text').value = savedColors.text;
+                document.getElementById('color-accent').value = savedColors.accent;
+                updateCustomTheme();
+            } else {
+                updateCustomTheme();
+            }
+        }
+
+        function toggleHeader(forceState) {
+            const isCurrentlyPinned = !mainHeader.classList.contains('unpinned');
+            const newState = (typeof forceState === 'boolean') ? forceState : !isCurrentlyPinned;
+
+            if (newState) {
+                mainHeader.classList.remove('unpinned');
+                pinBtn.classList.add('pin-active');
+                localStorage.setItem('headerPinned', 'true');
+            } else {
+                mainHeader.classList.add('unpinned');
+                pinBtn.classList.remove('pin-active');
+                localStorage.setItem('headerPinned', 'false');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initQuiz);
+
+    </script>
+</body>
+</html>
