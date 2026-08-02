@@ -1394,7 +1394,7 @@ function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); 
 const sections = [];
 quizData.forEach(q => { if (!sections.includes(q.section)) sections.push(q.section); });
 function shortLabel(name) {
-    const map = {};
+    const map = {"Histology of the Liver, Pancreas, and Gallbladder":"Liver, Pancreas, & GB Histology","Physiology of Liver and Biliary Tree":"Liver & Biliary Physiology"};
     return map[name] || name;
 }
 window.__bbShortLabel = shortLabel;
